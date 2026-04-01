@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>For My Karina</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffeef2;
+            font-family: 'Segoe UI', sans-serif;
+            overflow: hidden;
+            touch-action: none; /* Важно для мобилок, чтобы кнопка не тупила */
+        }
+
+        #container {
+            text-align: center;
+            z-index: 10;
+        }
+
+        .main-img {
+            max-width: 180px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #d63384;
+            font-size: 2rem;
+            margin-bottom: 40px;
+            padding: 0 20px;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        #yesBtn {
+            background-color: #ff4d6d;
+            color: white;
+            position: relative;
+            z-index: 100;
+        }
+
+        #noBtn {
+            background-color: #a0a0a0;
+            color: white;
+            position: absolute;
+            /* Начальная позиция - внизу справа */
+            right: 50px;
+            bottom: 50px;
+            z-index: 99;
+            transition: all 0.2s ease;
+        }
+
+        #result {
+            display: none;
+            font-size: 2.5rem;
+            color: #d63384;
+            font-weight: bold;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="container">
+        <div id="questionArea">
+            <img src="bebebe.png" alt="Cute" class="main-img">
+            <h1>will you be my valentine?</h1>
+            <button id="yesBtn">Да</button>
+        </div>
+
+        <div id="result">Ураааа! Люблю тебя ❤️</div>
+    </div>
+
+    <button id="noBtn">Нет</button>
+
+    <script>
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const questionArea = document.getElementById('questionArea');
+        const result = document.getElementById('result');
+
+        let scale = 1;
+        let phraseIndex = 0;
+
+        const phrases = [
+            "Ты уверена?", "Прям точно?", "Подумай еще разок!", "Может передумаешь?", 
+            "Я же обижусь! :( ", "Ну пожалуйстааа", "Сердце разбито 💔", 
+            "Кнопка 'Нет' сломалась!", "Я буду спамить тебе!", "Ай, больно!", 
+            "Ты просто стесняешься?", "Не верю!", "У меня лапки!", 
+            "Бе-бе-бе, не попала!", "Лови меня!", "Мимо!", "Слишком медленно!",
+            "Просто нажми ДА и всё!"
+        ];
+
+        function moveButton() {
+            // Рассчитываем случайные координаты так, чтобы кнопка не уходила за края экрана
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth - 20);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 20);
+            
+            noBtn.style.right = 'auto';
+            noBtn.style.bottom = 'auto';
+            noBtn.style.left = x + 'px';
+            noBtn.style.top = y + 'px';
+
+            // Меняем текст
+            noBtn.innerText = phrases[phraseIndex];
+            phraseIndex = (phraseIndex + 1) % phrases.length;
+
+            // Увеличиваем "Да"
+            scale += 0.25;
+            yesBtn.style.transform = `scale(${scale})`;
+        }
+
+        // Обработка клика и наведения для "Нет"
+        noBtn.addEventListener('mouseover', moveButton);
+        noBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            moveButton();
+        });
+
+        // Клик на "Да"
+        yesBtn.addEventListener('click', () => {
+            questionArea.style.display = 'none';
+            noBtn.style.display = 'none'; // Скрываем убегающую кнопку
+            result.style.display = 'block';
+            
+            confetti({
+                particleCount: 200,
+                spread: 100,
+                origin: { y: 0.6 },
+                colors: ['#ff4d6d', '#d63384', '#ffffff']
+            });
+        });
+    </script>
+</body>
+</html>
